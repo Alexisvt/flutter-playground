@@ -14,7 +14,7 @@ class HelloRectangle extends StatelessWidget {
         width: 300.0,
         child: Center(
           child: Text(
-            'Hola!',
+            'hola mundo!',
             style: TextStyle(fontSize: 40.0),
           ),
         ),
@@ -29,7 +29,7 @@ void main() {
     debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Hola mundo rectangle'),
+          title: Text('Hola rectangle'),
         ),
         body: HelloRectangle(),
       )
