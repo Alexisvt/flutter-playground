@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
         child: Center(
           child: Column(
             children: <Widget>[
-              Text('Add Widgets here'),
+              Text('Click the button below'),
               RaisedButton(
                 onPressed: _showBottom,
                 child: Text('Click me'),
