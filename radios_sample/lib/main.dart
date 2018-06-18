@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 main(List<String> args) {
-  runApp(new MaterialApp(
-    home: new MyApp(),
+  runApp(MaterialApp(
+    home: MyApp(),
   ));
 }
 
@@ -24,38 +24,38 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget makeRadios() {
-    List<Widget> list = new List<Widget>();
+    List<Widget> list = List<Widget>();
 
     [1, 2, 3].forEach((i) {
-      list.add(new Radio(
+      list.add(Radio(
         value: i,
         groupValue: _value1,
         onChanged: _setValue1,
       ));
     });
 
-    Column column = new Column(
+    Column column = Column(
       children: list,
     );
     return column;
   }
 
   Widget makeRadiosTiles() {
-    List<Widget> list = new List<Widget>();
+    List<Widget> list = List<Widget>();
 
     [1, 2, 3].forEach((i) {
-      list.add(new RadioListTile(
+      list.add(RadioListTile(
         value: i,
         groupValue: _value2,
         onChanged: _setValue2,
         activeColor: Colors.green,
         controlAffinity: ListTileControlAffinity.trailing,
-        title: new Text('Item: $i'),
-        subtitle: new Text('Subtitle'),
+        title: Text('Item: $i'),
+        subtitle: Text('Subtitle'),
       ));
     });
 
-    Column column = new Column(
+    Column column = Column(
       children: list,
     );
     return column;
@@ -63,14 +63,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('Name here'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Name here'),
       ),
-      body: new Container(
-        padding: new EdgeInsets.all(32.0),
-        child: new Center(
-          child: new Column(
+      body: Container(
+        padding: EdgeInsets.all(32.0),
+        child: Center(
+          child: Column(
             children: [makeRadios(), makeRadiosTiles()],
           ),
         ),

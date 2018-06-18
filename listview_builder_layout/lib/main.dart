@@ -55,9 +55,9 @@ class _MyAppState extends State<MyApp> {
                   itemCount: _countries.length,
                   itemBuilder: (BuildContext context, int index) {
                     String key = _countries.keys.elementAt(index);
-                    return Row(children: <Widget>[
+                    return Wrap(children: <Widget>[
                       Text('$key: '),
-                      // Text(_countries[key])
+                      Text(_countries[key])
                     ]);
                   },
                 ),
