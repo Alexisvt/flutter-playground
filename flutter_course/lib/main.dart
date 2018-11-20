@@ -1,54 +1,23 @@
 import 'package:flutter/material.dart';
 
+import './product_manager.dart';
+
 void main() => runApp(MyApp());
 
-class MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _MyAppState();
-  }
-}
-
-class _MyAppState extends State<MyApp> {
-  List<String> _products = ['Food Tester'];
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
+      theme: ThemeData(
+          brightness: Brightness.light,
+          primarySwatch: Colors.deepOrange,
+          accentColor: Colors.deepPurple),
       home: Scaffold(
         appBar: AppBar(
           title: Text('EasyList'),
         ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                onPressed: () {
-                  setState(() {
-                    _products.add('Advance Food Tester');
-                  });
-                },
-                child: Text("Add Product"),
-              ),
-            ),
-            Column(
-              children: _products
-                  .map(
-                    (element) => Card(
-                          child: Column(
-                            children: <Widget>[
-                              Image.asset('assets/food.jpg'),
-                              Text(element)
-                            ],
-                          ),
-                        ),
-                  )
-                  .toList(),
-            )
-          ],
-        ),
+        body: ProductManager('Food Tester'),
       ),
     );
   }
