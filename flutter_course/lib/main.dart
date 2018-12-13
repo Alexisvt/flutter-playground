@@ -25,7 +25,6 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.deepOrange,
         accentColor: Colors.deepPurple,
       ),
-//      home: AuthPage(),
       routes: {
         '/': (BuildContext context) => ProductsPage(_products, _addProduct, _deleteProduct),
         '/admin': (BuildContext context) => ProductsAdminPage(),
