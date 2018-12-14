@@ -26,8 +26,13 @@ class _MyAppState extends State<MyApp> {
         accentColor: Colors.deepPurple,
       ),
       routes: {
-        '/': (BuildContext context) => ProductsPage(_products, _addProduct, _deleteProduct),
-        '/admin': (BuildContext context) => ProductsAdminPage(),
+        '/': (BuildContext context) => ProductsPage(
+              _products,
+            ),
+        '/admin': (BuildContext context) => ProductsAdminPage(
+              _addProduct,
+              _deleteProduct,
+            ),
       },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
@@ -49,7 +54,10 @@ class _MyAppState extends State<MyApp> {
         return null;
       },
       onUnknownRoute: (RouteSettings settings) {
-        return MaterialPageRoute(builder: (BuildContext context) => ProductsPage(_products, _addProduct, _deleteProduct));
+        return MaterialPageRoute(
+            builder: (BuildContext context) => ProductsPage(
+                  _products,
+                ));
       },
     );
   }
