@@ -38,7 +38,7 @@ flutter:
   fonts:
     - family: Oswald
       fonts:
-        - asset: assets/Owasld-Bold.ttf
+        - asset: assets/Oswald-Bold.ttf
           weight: 700
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
