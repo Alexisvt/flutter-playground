@@ -6,8 +6,8 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String email = '';
-  String password = '';
+  String _emailValue = '';
+  String _passwordValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -15,37 +15,40 @@ class _AuthPageState extends State<AuthPage> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+      body: Container(
+        margin: EdgeInsets.all(10.0),
+        child: ListView(
           children: <Widget>[
             TextField(
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(labelText: 'E-Mail'),
+              keyboardType: TextInputType.emailAddress,
               onChanged: (String value) {
                 setState(() {
-                  email = value;
+                  _emailValue = value;
                 });
               },
             ),
             TextField(
-              decoration: InputDecoration(labelText: 'Password', ),
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+              ),
               onChanged: (String value) {
                 setState(() {
-                  password = value;
+                  _passwordValue = value;
                 });
               },
-              obscureText: true,
             ),
             SizedBox(height: 20.0),
-            Center(
-              child: RaisedButton(
-                child: Text('LOGIN'),
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/products');
-                },
-              ),
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+              child: Text('LOGIN'),
+              onPressed: () {
+                print(_emailValue);
+                print(_passwordValue);
+                Navigator.pushReplacementNamed(context, '/products');
+              },
             ),
           ],
         ),
