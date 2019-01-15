@@ -25,12 +25,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.deepOrange,
         accentColor: Colors.deepPurple,
+        buttonColor: Colors.deepPurple,
       ),
       routes: {
         '/': (BuildContext context) => AuthPage(),
