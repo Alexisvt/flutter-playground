@@ -15,37 +15,45 @@ class ProductCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Image.asset(product['image']),
-          Container(
-              padding: EdgeInsets.only(top: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TitleDefault(product['title']),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  ProductTag(product['price'].toString())
-                ],
-              )),
+          _buildTitlePriceRow(),
           AddressTag('Union Square, San Francisco'),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.info),
-                onPressed: () => Navigator.pushNamed<bool>(
-                    context, '/product/' + productIndex.toString()),
-                color: Theme.of(context).accentColor,
-              ),
-              IconButton(
-                icon: Icon(Icons.favorite_border),
-                onPressed: () {},
-                color: Colors.red,
-              )
-            ],
-          )
+          _buildActionButtons(context)
         ],
       ),
     );
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    return ButtonBar(
+      alignment: MainAxisAlignment.center,
+      children: <Widget>[
+        IconButton(
+          icon: Icon(Icons.info),
+          onPressed: () => Navigator.pushNamed<bool>(
+              context, '/product/' + productIndex.toString()),
+          color: Theme.of(context).accentColor,
+        ),
+        IconButton(
+          icon: Icon(Icons.favorite_border),
+          onPressed: () {},
+          color: Colors.red,
+        )
+      ],
+    );
+  }
+
+  Widget _buildTitlePriceRow() {
+    return Container(
+        padding: EdgeInsets.only(top: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TitleDefault(product['title']),
+            SizedBox(
+              width: 10.0,
+            ),
+            ProductTag(product['price'].toString())
+          ],
+        ));
   }
 }

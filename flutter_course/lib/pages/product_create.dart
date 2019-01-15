@@ -59,7 +59,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   }
 
   Widget _buildDescriptionTextField() {
-    return TextField(
+    return TextField( 
       decoration: InputDecoration(labelText: 'Product description'),
       keyboardType: TextInputType.multiline,
       maxLines: 4,
