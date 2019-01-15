@@ -64,6 +64,14 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   Widget _buildPriceTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product price'),
+      validator: (String value) {
+        // logic that validate the value
+        // if there is no issue return null
+        if (value.isEmpty ||
+            !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
+          return "Price is required and should be a number";
+        }
+      },
       keyboardType: TextInputType.number,
       onSaved: (String value) {
         _priceValue = double.parse(value);
@@ -74,6 +82,13 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   Widget _buildDescriptionTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product description'),
+      validator: (String value) {
+        // logic that validate the value
+        // if there is no issue return null
+        if (value.isEmpty || value.length < 10) {
+          return "Description is required and should be 10+ characters long.";
+        }
+      },
       keyboardType: TextInputType.multiline,
       maxLines: 4,
       onSaved: (String value) {
@@ -89,8 +104,8 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
       validator: (String value) {
         // logic that validate the value
         // if there is no issue return null
-        if (value.isEmpty) {
-          return "Title is required";
+        if (value.isEmpty || value.length < 5) {
+          return "Title is required and should be 5+ characters long.";
         }
       },
       onSaved: (String value) {
