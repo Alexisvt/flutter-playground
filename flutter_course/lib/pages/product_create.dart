@@ -46,6 +46,9 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   }
 
   _submitForm() {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
     _formKey.currentState.save();
 
     final Map<String, dynamic> product = {
@@ -82,6 +85,14 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   Widget _buildTitleTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product Title'),
+      // autovalidate: true,
+      validator: (String value) {
+        // logic that validate the value
+        // if there is no issue return null
+        if (value.isEmpty) {
+          return "Title is required";
+        }
+      },
       onSaved: (String value) {
         setState(() {
           _titleValue = value;
