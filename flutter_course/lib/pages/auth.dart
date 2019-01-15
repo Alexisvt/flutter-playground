@@ -6,9 +6,12 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String _emailValue = '';
-  String _passwordValue = '';
-  bool _acceptTerms = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final Map<String, dynamic> _formData = {
+    'email': null,
+    'password': null,
+    'acceptTerms': false
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -18,30 +21,33 @@ class _AuthPageState extends State<AuthPage> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: _buildBackgroundImage(),
-        ),
-        padding: EdgeInsets.all(10.0),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              width: targetWidth,
-              child: Column(
-                children: <Widget>[
-                  _buildEmailTextField(),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  _buildPasswordTextField(),
-                  _buildAcceptSwitch(),
-                  SizedBox(height: 20.0),
-                  RaisedButton(
-                    textColor: Colors.white,
-                    child: Text('LOGIN'),
-                    onPressed: _submitForm,
-                  ),
-                ],
+      body: Form(
+        key: _formKey,
+        child: Container(
+          decoration: BoxDecoration(
+            image: _buildBackgroundImage(),
+          ),
+          padding: EdgeInsets.all(10.0),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Container(
+                width: targetWidth,
+                child: Column(
+                  children: <Widget>[
+                    _buildEmailTextField(),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    _buildPasswordTextField(),
+                    _buildAcceptSwitch(),
+                    SizedBox(height: 20.0),
+                    RaisedButton(
+                      textColor: Colors.white,
+                      child: Text('LOGIN'),
+                      onPressed: _submitForm,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -52,44 +58,52 @@ class _AuthPageState extends State<AuthPage> {
 
   SwitchListTile _buildAcceptSwitch() {
     return SwitchListTile(
-      value: _acceptTerms,
+      value: _formData['acceptTerms'],
       onChanged: (bool value) {
         setState(() {
-          _acceptTerms = value;
+          _formData['acceptTerms'] = value;
         });
       },
       title: Text('Accep terms'),
     );
   }
 
-  TextField _buildPasswordTextField() {
-    return TextField(
+  Widget _buildPasswordTextField() {
+    return TextFormField(
       obscureText: true,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
         labelText: 'Password',
       ),
-      onChanged: (String value) {
-        setState(() {
-          _passwordValue = value;
-        });
+      validator: (String value) {
+        if (value.isEmpty || value.length < 4) {
+          return "Password is required and should be 4+ character long.";
+        }
+      },
+      onSaved: (String value) {
+        _formData['password'] = value;
       },
     );
   }
 
   Widget _buildEmailTextField() {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(
         labelText: 'E-Mail',
         filled: true,
         fillColor: Colors.white,
       ),
+      validator: (String value) {
+        if (value.isEmpty ||
+            !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                .hasMatch(value)) {
+          return "E-mail is required and should be a valid E-mail";
+        }
+      },
       keyboardType: TextInputType.emailAddress,
-      onChanged: (String value) {
-        setState(() {
-          _emailValue = value;
-        });
+      onSaved: (String value) {
+        _formData['email'] = value;
       },
     );
   }
@@ -106,8 +120,13 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   void _submitForm() {
-    print(_emailValue);
-    print(_passwordValue);
+    if (!_formKey.currentState.validate() || !_formData['acceptTerms']) {
+      return;
+    }
+    _formKey.currentState.save();
+
+    print(_formData['email']);
+    print(_formData['password']);
     Navigator.pushReplacementNamed(context, '/products');
   }
 }
