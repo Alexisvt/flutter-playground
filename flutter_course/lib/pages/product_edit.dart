@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
-class ProductCreatePage extends StatefulWidget {
+class ProductEditPage extends StatefulWidget {
   final Function addProduct;
+  final Function updateProduct;
+  final Map<String, dynamic> product;
+  final int productIndex;
 
-  ProductCreatePage(this.addProduct);
+  ProductEditPage(
+      {this.addProduct, this.updateProduct, this.product, this.productIndex});
 
   @override
-  _ProductCreatePageState createState() => _ProductCreatePageState();
+  _ProductEditPageState createState() => _ProductEditPageState();
 }
 
-class _ProductCreatePageState extends State<ProductCreatePage> {
+class _ProductEditPageState extends State<ProductEditPage> {
   final Map<String, dynamic> _formData = {
     'title': null,
     'description': null,
@@ -23,8 +27,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
     final double targetPadding = deviceWidth - targetWidth;
-
-    return GestureDetector(
+    final Widget pageContent = GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
@@ -60,22 +63,36 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
         ),
       ),
     );
+
+    return widget.product == null
+        ? pageContent
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('Edit Product'),
+            ),
+            body: pageContent,
+          );
   }
 
   _submitForm() {
     if (!_formKey.currentState.validate()) {
       return;
     }
+    if (widget.product == null) {
+      widget.addProduct(_formData);
+    } else {
+      widget.updateProduct(widget.productIndex, _formData);
+    }
     _formKey.currentState.save();
 
-    final Map<String, dynamic> product = _formData;
-    widget.addProduct(product);
     Navigator.pushReplacementNamed(context, '/products');
   }
 
   Widget _buildPriceTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product price'),
+      initialValue:
+          widget.product == null ? '' : widget.product['price'].toString(),
       validator: (String value) {
         // logic that validate the value
         // if there is no issue return null
@@ -94,6 +111,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   Widget _buildDescriptionTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product description'),
+      initialValue: widget.product == null ? '' : widget.product['description'],
       validator: (String value) {
         // logic that validate the value
         // if there is no issue return null
@@ -112,6 +130,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   Widget _buildTitleTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product Title'),
+      initialValue: widget.product == null ? '' : widget.product['title'],
       // autovalidate: true,
       validator: (String value) {
         // logic that validate the value
