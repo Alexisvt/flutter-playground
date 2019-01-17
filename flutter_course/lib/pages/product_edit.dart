@@ -87,8 +87,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  _submitForm(Function addProduct, Function updateProduct,
-      [int selectedProductIndex]) {
+  _submitForm(
+      Function addProduct, Function updateProduct, int selectedProductIndex) {
     if (!_formKey.currentState.validate()) {
       return;
     }
