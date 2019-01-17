@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../models/product.dart';
 
 class ProductEditPage extends StatefulWidget {
   final Function addProduct;
   final Function updateProduct;
-  final Map<String, dynamic> product;
+  final Product product;
   final int productIndex;
 
   ProductEditPage(
@@ -83,21 +84,31 @@ class _ProductEditPageState extends State<ProductEditPage> {
     if (!_formKey.currentState.validate()) {
       return;
     }
-    if (widget.product == null) {
-      widget.addProduct(_formData);
-    } else {
-      widget.updateProduct(widget.productIndex, _formData);
-    }
     _formKey.currentState.save();
 
+    if (widget.product == null) {
+      widget.addProduct(_getProductInstance());
+    } else {
+      widget.updateProduct(widget.productIndex, _getProductInstance());
+    }
+
     Navigator.pushReplacementNamed(context, '/products');
+  }
+
+  Product _getProductInstance() {
+    return Product(
+      title: _formData['title'],
+      description: _formData['description'],
+      price: _formData['price'],
+      image: _formData['image'],
+    );
   }
 
   Widget _buildPriceTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product price'),
       initialValue:
-          widget.product == null ? '' : widget.product['price'].toString(),
+          widget.product == null ? '' : widget.product.price.toString(),
       validator: (String value) {
         // logic that validate the value
         // if there is no issue return null
@@ -116,7 +127,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   Widget _buildDescriptionTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product description'),
-      initialValue: widget.product == null ? '' : widget.product['description'],
+      initialValue: widget.product == null ? '' : widget.product.description,
       validator: (String value) {
         // logic that validate the value
         // if there is no issue return null
@@ -135,7 +146,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   Widget _buildTitleTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product Title'),
-      initialValue: widget.product == null ? '' : widget.product['title'],
+      initialValue: widget.product == null ? '' : widget.product.title,
       // autovalidate: true,
       validator: (String value) {
         // logic that validate the value
