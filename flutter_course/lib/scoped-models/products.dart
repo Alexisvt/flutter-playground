@@ -23,16 +23,19 @@ class ProductsModel extends Model {
 
   void deleteProduct() {
     _products.removeAt(_selectedProductIndex);
+    notifyListeners();
   }
 
   void addProduct(Product product) {
     _products.add(product);
     _selectedProductIndex = null;
+    notifyListeners();
   }
 
   void updateProduct(Product product) {
     _products[_selectedProductIndex] = product;
     _selectedProductIndex = null;
+    notifyListeners();
   }
 
   void selectProduct(int index) {
