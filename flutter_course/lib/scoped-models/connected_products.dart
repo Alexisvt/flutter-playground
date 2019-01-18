@@ -60,7 +60,6 @@ mixin ProductsModel on ConnectedProductsModel {
 
   void deleteProduct() {
     _products.removeAt(_selProductIndex);
-    _selProductIndex = null;
     notifyListeners();
   }
 
@@ -78,14 +77,15 @@ mixin ProductsModel on ConnectedProductsModel {
       userEmail: selectedProduct.userEmail,
       userId: selectedProduct.userId,
     );
-    _selProductIndex = null;
     _products[_selProductIndex] = updatedProduct;
     notifyListeners();
   }
 
   void selectProduct(int index) {
     _selProductIndex = index;
-    notifyListeners();
+    if (index != null) {
+      notifyListeners();
+    }
   }
 
   void toggleProductFavoriteStatus() {
@@ -99,7 +99,6 @@ mixin ProductsModel on ConnectedProductsModel {
       userId: selectedProduct.userId,
     );
 
-    _selProductIndex = null;
     _products[_selProductIndex] = updatedProduct;
     notifyListeners();
   }

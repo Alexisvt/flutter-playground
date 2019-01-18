@@ -81,14 +81,14 @@ class _ProductEditPageState extends State<ProductEditPage> {
           child: Text('Save'),
           textColor: Colors.white,
           onPressed: () => _submitForm(model.addProduct, model.updateProduct,
-              model.selectedProductIndex),
+              model.selectedProductIndex, model.selectProduct),
         );
       },
     );
   }
 
-  _submitForm(
-      Function addProduct, Function updateProduct, int selectedProductIndex) {
+  _submitForm(Function addProduct, Function updateProduct,
+      int selectedProductIndex, Function setSelectedProduct) {
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -110,7 +110,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
       );
     }
 
-    Navigator.pushReplacementNamed(context, '/products');
+    Navigator.pushReplacementNamed(context, '/products')
+        .then((_) => setSelectedProduct(null));
   }
 
   Widget _buildPriceTextField(Product product) {
