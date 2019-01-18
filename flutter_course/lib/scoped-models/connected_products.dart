@@ -1,6 +1,8 @@
 import 'package:scoped_model/scoped_model.dart';
 import '../models/product.dart';
 import '../models/user.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
@@ -13,18 +15,34 @@ mixin ConnectedProductsModel on Model {
     String image,
     double price,
   ) {
-    final Product newProduct = Product(
-      title: title,
-      description: description,
-      image: image,
-      price: price,
-      userEmail: _authenticatedUser.email,
-      userId: _authenticatedUser.id,
-    );
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://cdn.ochocandy.com/wp-content/uploads/2017/09/coconut.jpg',
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id,
+    };
+    http
+        .post('https://flutter-products-d86a0.firebaseio.com/products.json',
+            body: json.encode(productData))
+        .then((response) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final Product newProduct = Product(
+        id: responseData['name'],
+        title: title,
+        description: description,
+        image: image,
+        price: price,
+        userEmail: _authenticatedUser.email,
+        userId: _authenticatedUser.id,
+      );
 
-    _products.add(newProduct);
-    _selProductIndex = null;
-    notifyListeners();
+      _products.add(newProduct);
+      _selProductIndex = null;
+      notifyListeners();
+    });
   }
 }
 
@@ -61,6 +79,31 @@ mixin ProductsModel on ConnectedProductsModel {
   void deleteProduct() {
     _products.removeAt(_selProductIndex);
     notifyListeners();
+  }
+
+  void fetchProduct() {
+    http
+        .get('https://flutter-products-d86a0.firebaseio.com/products.json')
+        .then((response) {
+      final List<Product> fetchedProductList = [];
+      final Map<String, dynamic> productListData = json.decode(response.body);
+
+      productListData.forEach((productId, productData) {
+        final Product product = Product(
+          id: productId,
+          title: productData['title'],
+          description: productData['description'],
+          image: productData['image'],
+          price: productData['price'],
+          userEmail: productData['userEmail'],
+          userId: productData['userId'],
+        );
+        fetchedProductList.add(product);
+      });
+
+      _products = fetchedProductList;
+      notifyListeners();
+    });
   }
 
   void updateProduct(
