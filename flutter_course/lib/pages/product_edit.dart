@@ -95,21 +95,22 @@ class _ProductEditPageState extends State<ProductEditPage> {
     _formKey.currentState.save();
 
     if (selectedProductIndex == null) {
-      addProduct(_getProductInstance());
+      addProduct(
+        _formData['title'],
+        _formData['description'],
+        _formData['image'],
+        _formData['price'],
+      );
     } else {
-      updateProduct(_getProductInstance());
+      updateProduct(
+        _formData['title'],
+        _formData['description'],
+        _formData['image'],
+        _formData['price'],
+      );
     }
 
     Navigator.pushReplacementNamed(context, '/products');
-  }
-
-  Product _getProductInstance() {
-    return Product(
-      title: _formData['title'],
-      description: _formData['description'],
-      price: _formData['price'],
-      image: _formData['image'],
-    );
   }
 
   Widget _buildPriceTextField(Product product) {
