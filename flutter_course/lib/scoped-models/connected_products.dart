@@ -3,18 +3,22 @@ import '../models/product.dart';
 import '../models/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
   User _authenticatedUser;
   int _selProductIndex;
+  bool _isLoading = false;
 
-  void addProduct(
+  Future<Null> addProduct(
     String title,
     String description,
     String image,
     double price,
   ) {
+    _isLoading = true;
+    notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
@@ -24,7 +28,7 @@ mixin ConnectedProductsModel on Model {
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
     };
-    http
+    return http
         .post('https://flutter-products-d86a0.firebaseio.com/products.json',
             body: json.encode(productData))
         .then((response) {
@@ -41,6 +45,7 @@ mixin ConnectedProductsModel on Model {
 
       _products.add(newProduct);
       _selProductIndex = null;
+      _isLoading = false;
       notifyListeners();
     });
   }
@@ -82,11 +87,19 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   void fetchProduct() {
+    _isLoading = true;
+    notifyListeners();
     http
         .get('https://flutter-products-d86a0.firebaseio.com/products.json')
         .then((response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
+
+      if (productListData == null) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
 
       productListData.forEach((productId, productData) {
         final Product product = Product(
@@ -102,6 +115,7 @@ mixin ProductsModel on ConnectedProductsModel {
       });
 
       _products = fetchedProductList;
+      _isLoading = false;
       notifyListeners();
     });
   }
@@ -155,5 +169,11 @@ mixin ProductsModel on ConnectedProductsModel {
 mixin UsersModel on ConnectedProductsModel {
   void login(String email, String password) {
     _authenticatedUser = User(id: '1213213', email: email, password: password);
+  }
+}
+
+mixin UtilityModel on ConnectedProductsModel {
+  bool get isLoading {
+    return _isLoading;
   }
 }

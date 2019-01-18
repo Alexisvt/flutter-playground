@@ -77,12 +77,19 @@ class _ProductEditPageState extends State<ProductEditPage> {
   Widget _buildSubmitButton() {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        return RaisedButton(
-          child: Text('Save'),
-          textColor: Colors.white,
-          onPressed: () => _submitForm(model.addProduct, model.updateProduct,
-              model.selectedProductIndex, model.selectProduct),
-        );
+        return model.isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : RaisedButton(
+                child: Text('Save'),
+                textColor: Colors.white,
+                onPressed: () => _submitForm(
+                    model.addProduct,
+                    model.updateProduct,
+                    model.selectedProductIndex,
+                    model.selectProduct),
+              );
       },
     );
   }
@@ -100,7 +107,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _formData['description'],
         _formData['image'],
         _formData['price'],
-      );
+      ).then((_) {
+        Navigator.pushReplacementNamed(context, '/products')
+            .then((_) => setSelectedProduct(null));
+      });
     } else {
       updateProduct(
         _formData['title'],
@@ -109,9 +119,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _formData['price'],
       );
     }
-
-    Navigator.pushReplacementNamed(context, '/products')
-        .then((_) => setSelectedProduct(null));
   }
 
   Widget _buildPriceTextField(Product product) {
