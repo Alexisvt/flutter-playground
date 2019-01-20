@@ -120,22 +120,41 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void updateProduct(
+  Future<Null> updateProduct(
     String title,
     String description,
     String image,
     double price,
   ) {
-    final Product updatedProduct = Product(
-      title: title,
-      description: description,
-      image: image,
-      price: price,
-      userEmail: selectedProduct.userEmail,
-      userId: selectedProduct.userId,
-    );
-    _products[_selProductIndex] = updatedProduct;
-    notifyListeners();
+    final Map<String, dynamic> updateData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://cdn.ochocandy.com/wp-content/uploads/2017/09/coconut.jpg',
+      'price': price,
+      'userEmail': selectedProduct.userEmail,
+      'userId': selectedProduct.userId,
+    };
+    _isLoading = true;
+
+    return http
+        .put(
+            'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}.json',
+            body: json.encode(updateData))
+        .then((response) {
+      _isLoading = false;
+      final Product updatedProduct = Product(
+        id: selectedProduct.id,
+        title: title,
+        description: description,
+        image: image,
+        price: price,
+        userEmail: selectedProduct.userEmail,
+        userId: selectedProduct.userId,
+      );
+      _products[_selProductIndex] = updatedProduct;
+      notifyListeners();
+    });
   }
 
   void selectProduct(int index) {

@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
         ),
         routes: {
           '/': (BuildContext context) => AuthPage(),
-          '/admin': (BuildContext context) => ProductsAdminPage(),
+          '/admin': (BuildContext context) => ProductsAdminPage(model),
           '/products': (BuildContext context) => ProductsPage(model),
         },
         onGenerateRoute: (RouteSettings settings) {
