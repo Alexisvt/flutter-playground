@@ -82,8 +82,18 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   void deleteProduct() {
+    _isLoading = true;
+    final deletedProductId = selectedProduct.id;
     _products.removeAt(_selProductIndex);
+    _selProductIndex = null;
     notifyListeners();
+    http
+        .delete(
+            'https://flutter-products-d86a0.firebaseio.com/products/$deletedProductId.json')
+        .then((response) {
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 
   void fetchProduct() {
@@ -136,6 +146,7 @@ mixin ProductsModel on ConnectedProductsModel {
       'userId': selectedProduct.userId,
     };
     _isLoading = true;
+    notifyListeners();
 
     return http
         .put(
@@ -153,6 +164,7 @@ mixin ProductsModel on ConnectedProductsModel {
         userId: selectedProduct.userId,
       );
       _products[_selProductIndex] = updatedProduct;
+      _isLoading = false;
       notifyListeners();
     });
   }
