@@ -23,39 +23,43 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        return ListView.builder(
-          itemBuilder: (BuildContext builder, int index) {
-            return Dismissible(
-              // we need to use an unique value, this title is for demo porpuse
-              key: Key(model.allProducts[index].title),
-              onDismissed: (DismissDirection direction) {
-                if (direction == DismissDirection.endToStart) {
-                  model.selectProduct(model.allProducts[index].id);
-                  model.deleteProduct();
-                }
-              },
-              background: Container(
-                color: Colors.red,
-              ),
-              child: Column(
-                children: <Widget>[
-                  ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(model.allProducts[index].image),
+        return model.isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                itemBuilder: (BuildContext builder, int index) {
+                  return Dismissible(
+                    // we need to use an unique value, this title is for demo porpuse
+                    key: Key(model.allProducts[index].title),
+                    onDismissed: (DismissDirection direction) {
+                      if (direction == DismissDirection.endToStart) {
+                        model.selectProduct(model.allProducts[index].id);
+                        model.deleteProduct();
+                      }
+                    },
+                    background: Container(
+                      color: Colors.red,
                     ),
-                    title: Text(model.allProducts[index].title),
-                    subtitle:
-                        Text('\$${model.allProducts[index].price.toString()}'),
-                    trailing: _buildEditButton(context, index, model),
-                  ),
-                  Divider()
-                ],
-              ),
-            );
-          },
-          itemCount: model.allProducts.length,
-        );
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(model.allProducts[index].image),
+                          ),
+                          title: Text(model.allProducts[index].title),
+                          subtitle: Text(
+                              '\$${model.allProducts[index].price.toString()}'),
+                          trailing: _buildEditButton(context, index, model),
+                        ),
+                        Divider()
+                      ],
+                    ),
+                  );
+                },
+                itemCount: model.allProducts.length,
+              );
       },
     );
   }

@@ -11,7 +11,7 @@ mixin ConnectedProductsModel on Model {
   String _selProductId;
   bool _isLoading = false;
 
-  Future<Null> addProduct(
+  Future<bool> addProduct(
     String title,
     String description,
     String image,
@@ -32,6 +32,12 @@ mixin ConnectedProductsModel on Model {
         .post('https://flutter-products-d86a0.firebaseio.com/products.json',
             body: json.encode(productData))
         .then((response) {
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
       final Map<String, dynamic> responseData = json.decode(response.body);
       final Product newProduct = Product(
         id: responseData['name'],
@@ -45,8 +51,12 @@ mixin ConnectedProductsModel on Model {
 
       _products.add(newProduct);
       _selProductId = null;
+      notifyListeners();
+      return true;
+    }).catchError((error) {
       _isLoading = false;
       notifyListeners();
+      return false;
     });
   }
 }
@@ -68,7 +78,7 @@ mixin ProductsModel on ConnectedProductsModel {
   String get selectedProductId => _selProductId;
 
   Product get selectedProduct {
-    if (_selProductId == null) {
+    if (selectedProductId == null) {
       return null;
     }
 
@@ -78,18 +88,61 @@ mixin ProductsModel on ConnectedProductsModel {
   int get selectedProductIndex =>
       _products.indexWhere((product) => product.id == _selProductId);
 
-  void deleteProduct() {
+  Future<bool> updateProduct(
+      String title, String description, String image, double price) {
+    _isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> updateData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://cdn.ochocandy.com/wp-content/uploads/2017/09/coconut.jpg',
+      'price': price,
+      'userEmail': selectedProduct.userEmail,
+      'userId': selectedProduct.userId,
+    };
+    return http
+        .put(
+            'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}.json',
+            body: json.encode(updateData))
+        .then((response) {
+      _isLoading = false;
+      final Product updatedProduct = Product(
+        id: selectedProduct.id,
+        title: title,
+        description: description,
+        image: image,
+        price: price,
+        userEmail: selectedProduct.userEmail,
+        userId: selectedProduct.userId,
+      );
+      _products[selectedProductIndex] = updatedProduct;
+      notifyListeners();
+      return true;
+    }).catchError((error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    });
+  }
+
+  Future<bool> deleteProduct() {
     _isLoading = true;
     final deletedProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
     _selProductId = null;
     notifyListeners();
-    http
+    return http
         .delete(
             'https://flutter-products-d86a0.firebaseio.com/products/$deletedProductId.json')
         .then((response) {
       _isLoading = false;
       notifyListeners();
+      return true;
+    }).catchError((error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
@@ -98,7 +151,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     return http
         .get('https://flutter-products-d86a0.firebaseio.com/products.json')
-        .then((response) {
+        .then<Null>((response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
 
@@ -125,53 +178,12 @@ mixin ProductsModel on ConnectedProductsModel {
       _isLoading = false;
       notifyListeners();
       _selProductId = null;
-    });
-  }
-
-  Future<Null> updateProduct(
-    String title,
-    String description,
-    String image,
-    double price,
-  ) {
-    final Map<String, dynamic> updateData = {
-      'title': title,
-      'description': description,
-      'image':
-          'https://cdn.ochocandy.com/wp-content/uploads/2017/09/coconut.jpg',
-      'price': price,
-      'userEmail': selectedProduct.userEmail,
-      'userId': selectedProduct.userId,
-    };
-    _isLoading = true;
-    notifyListeners();
-
-    return http
-        .put(
-            'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}.json',
-            body: json.encode(updateData))
-        .then((response) {
+      return;
+    }).catchError((error) {
       _isLoading = false;
-      final Product updatedProduct = Product(
-        id: selectedProduct.id,
-        title: title,
-        description: description,
-        image: image,
-        price: price,
-        userEmail: selectedProduct.userEmail,
-        userId: selectedProduct.userId,
-      );
-
-      _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
+      return;
     });
-  }
-
-  void selectProduct(String productId) {
-    _selProductId = productId;
-    if (productId != null) {
-      notifyListeners();
-    }
   }
 
   void toggleProductFavoriteStatus() {
@@ -188,6 +200,13 @@ mixin ProductsModel on ConnectedProductsModel {
 
     _products[selectedProductIndex] = updatedProduct;
     notifyListeners();
+  }
+
+  void selectProduct(String productId) {
+    _selProductId = productId;
+    if (productId != null) {
+      notifyListeners();
+    }
   }
 
   void toggleDisplayMode() {
