@@ -18,7 +18,7 @@ class ProductsPage extends StatefulWidget {
 class _ProductsPageState extends State<ProductsPage> {
   @override
   void initState() {
-    widget.model.fetchProduct();
+    widget.model.fetchProducts();
     super.initState();
   }
 
@@ -62,7 +62,7 @@ class _ProductsPageState extends State<ProductsPage> {
 
         return RefreshIndicator(
           child: content,
-          onRefresh: model.fetchProduct,
+          onRefresh: model.fetchProducts,
         );
       },
     );

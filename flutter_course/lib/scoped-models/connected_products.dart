@@ -8,7 +8,7 @@ import 'dart:async';
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
   User _authenticatedUser;
-  int _selProductIndex;
+  String _selProductId;
   bool _isLoading = false;
 
   Future<Null> addProduct(
@@ -44,7 +44,7 @@ mixin ConnectedProductsModel on Model {
       );
 
       _products.add(newProduct);
-      _selProductIndex = null;
+      _selProductId = null;
       _isLoading = false;
       notifyListeners();
     });
@@ -54,9 +54,7 @@ mixin ConnectedProductsModel on Model {
 mixin ProductsModel on ConnectedProductsModel {
   bool _showFavorites = false;
 
-  List<Product> get allProducts {
-    return List.from(_products);
-  }
+  List<Product> get allProducts => List.from(_products);
 
   List<Product> get displayedProducts {
     if (_showFavorites) {
@@ -65,27 +63,26 @@ mixin ProductsModel on ConnectedProductsModel {
     return List.from(_products);
   }
 
-  int get selectedProductIndex {
-    return _selProductIndex;
-  }
+  bool get displayFavoritesOly => _showFavorites;
 
-  bool get displayFavoritesOly {
-    return _showFavorites;
-  }
+  String get selectedProductId => _selProductId;
 
   Product get selectedProduct {
-    if (selectedProductIndex == null) {
+    if (_selProductId == null) {
       return null;
     }
 
-    return _products[selectedProductIndex];
+    return _products.firstWhere((product) => product.id == _selProductId);
   }
+
+  int get selectedProductIndex =>
+      _products.indexWhere((product) => product.id == _selProductId);
 
   void deleteProduct() {
     _isLoading = true;
     final deletedProductId = selectedProduct.id;
-    _products.removeAt(_selProductIndex);
-    _selProductIndex = null;
+    _products.removeAt(selectedProductIndex);
+    _selProductId = null;
     notifyListeners();
     http
         .delete(
@@ -96,7 +93,7 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<Null> fetchProduct() {
+  Future<Null> fetchProducts() {
     _isLoading = true;
     notifyListeners();
     return http
@@ -127,6 +124,7 @@ mixin ProductsModel on ConnectedProductsModel {
       _products = fetchedProductList;
       _isLoading = false;
       notifyListeners();
+      _selProductId = null;
     });
   }
 
@@ -163,21 +161,22 @@ mixin ProductsModel on ConnectedProductsModel {
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
       );
-      _products[_selProductIndex] = updatedProduct;
-      _isLoading = false;
+
+      _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
     });
   }
 
-  void selectProduct(int index) {
-    _selProductIndex = index;
-    if (index != null) {
+  void selectProduct(String productId) {
+    _selProductId = productId;
+    if (productId != null) {
       notifyListeners();
     }
   }
 
   void toggleProductFavoriteStatus() {
     final Product updatedProduct = Product(
+      id: selectedProduct.id,
       title: selectedProduct.title,
       description: selectedProduct.description,
       price: selectedProduct.price,
@@ -187,7 +186,7 @@ mixin ProductsModel on ConnectedProductsModel {
       userId: selectedProduct.userId,
     );
 
-    _products[_selProductIndex] = updatedProduct;
+    _products[selectedProductIndex] = updatedProduct;
     notifyListeners();
   }
 
