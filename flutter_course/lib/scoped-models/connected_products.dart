@@ -10,6 +10,34 @@ mixin ConnectedProductsModel on Model {
   User _authenticatedUser;
   String _selProductId;
   bool _isLoading = false;
+}
+
+mixin ProductsModel on ConnectedProductsModel {
+  bool _showFavorites = false;
+
+  List<Product> get allProducts => List.from(_products);
+
+  List<Product> get displayedProducts {
+    if (_showFavorites) {
+      return _products.where((Product product) => product.isFavorite).toList();
+    }
+    return List.from(_products);
+  }
+
+  bool get displayFavoritesOly => _showFavorites;
+
+  String get selectedProductId => _selProductId;
+
+  Product get selectedProduct {
+    if (selectedProductId == null) {
+      return null;
+    }
+
+    return _products.firstWhere((product) => product.id == _selProductId);
+  }
+
+  int get selectedProductIndex =>
+      _products.indexWhere((product) => product.id == _selProductId);
 
   Future<bool> addProduct(
     String title,
@@ -60,34 +88,6 @@ mixin ConnectedProductsModel on Model {
       return false;
     }
   }
-}
-
-mixin ProductsModel on ConnectedProductsModel {
-  bool _showFavorites = false;
-
-  List<Product> get allProducts => List.from(_products);
-
-  List<Product> get displayedProducts {
-    if (_showFavorites) {
-      return _products.where((Product product) => product.isFavorite).toList();
-    }
-    return List.from(_products);
-  }
-
-  bool get displayFavoritesOly => _showFavorites;
-
-  String get selectedProductId => _selProductId;
-
-  Product get selectedProduct {
-    if (selectedProductId == null) {
-      return null;
-    }
-
-    return _products.firstWhere((product) => product.id == _selProductId);
-  }
-
-  int get selectedProductIndex =>
-      _products.indexWhere((product) => product.id == _selProductId);
 
   Future<bool> updateProduct(
       String title, String description, String image, double price) {
