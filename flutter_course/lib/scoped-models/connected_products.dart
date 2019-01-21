@@ -16,7 +16,7 @@ mixin ConnectedProductsModel on Model {
     String description,
     String image,
     double price,
-  ) {
+  ) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
@@ -28,10 +28,11 @@ mixin ConnectedProductsModel on Model {
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
     };
-    return http
-        .post('https://flutter-products-d86a0.firebaseio.com/products.json',
-            body: json.encode(productData))
-        .then((response) {
+    try {
+      final http.Response response = await http.post(
+          'https://flutter-products-d86a0.firebaseio.com/products.json',
+          body: json.encode(productData));
+
       if (response.statusCode != 200 && response.statusCode != 201) {
         _isLoading = false;
         notifyListeners();
@@ -53,11 +54,11 @@ mixin ConnectedProductsModel on Model {
       _selProductId = null;
       notifyListeners();
       return true;
-    }).catchError((error) {
+    } catch (error) {
       _isLoading = false;
       notifyListeners();
       return false;
-    });
+    }
   }
 }
 
