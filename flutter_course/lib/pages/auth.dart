@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 
+enum AuthMode {
+  Signup,
+  Login,
+}
+
 class AuthPage extends StatefulWidget {
   @override
   _AuthPageState createState() => _AuthPageState();
@@ -14,6 +19,8 @@ class _AuthPageState extends State<AuthPage> {
     'password': null,
     'acceptTerms': false
   };
+  final TextEditingController _passwordTextController = TextEditingController();
+  AuthMode _authMode = AuthMode.Login;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +48,24 @@ class _AuthPageState extends State<AuthPage> {
                       height: 10.0,
                     ),
                     _buildPasswordTextField(),
+                    SizedBox(height: 10.0),
+                    _authMode == AuthMode.Signup
+                        ? _buildPasswordConfirmTextField()
+                        : Container(),
+                    SizedBox(height: 10.0),
                     _buildAcceptSwitch(),
+                    SizedBox(height: 20.0),
+                    FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          _authMode = _authMode == AuthMode.Login
+                              ? AuthMode.Signup
+                              : AuthMode.Login;
+                        });
+                      },
+                      child: Text(
+                          'Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'Login'}'),
+                    ),
                     SizedBox(height: 20.0),
                     ScopedModelDescendant<MainModel>(
                       builder: (BuildContext context, Widget child,
@@ -91,6 +115,7 @@ class _AuthPageState extends State<AuthPage> {
       onSaved: (String value) {
         _formData['password'] = value;
       },
+      controller: _passwordTextController,
     );
   }
 
@@ -109,6 +134,25 @@ class _AuthPageState extends State<AuthPage> {
         }
       },
       keyboardType: TextInputType.emailAddress,
+      onSaved: (String value) {
+        _formData['email'] = value;
+      },
+    );
+  }
+
+  Widget _buildPasswordConfirmTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Confirm Password',
+        filled: true,
+        fillColor: Colors.white,
+      ),
+      validator: (String value) {
+        if (_passwordTextController.text != value) {
+          return "Password do not match.";
+        }
+      },
+      obscureText: true,
       onSaved: (String value) {
         _formData['email'] = value;
       },
