@@ -12,6 +12,7 @@ class LogoutListTile extends StatelessWidget {
           leading: Icon(Icons.exit_to_app),
           onTap: () {
             model.logout();
+            // TODO: this is a workaround to allow the app the manual logout without crash
             Navigator.of(context).pushReplacementNamed('/');
           },
         );
