@@ -220,6 +220,8 @@ mixin ProductsModel on ConnectedProductsModel {
 }
 
 mixin UsersModel on ConnectedProductsModel {
+  Timer _authTimer;
+
   User get user {
     return _authenticatedUser;
   }
@@ -264,11 +266,18 @@ mixin UsersModel on ConnectedProductsModel {
         email: email,
         token: responseData['idToken'],
       );
+
+      setAuthTimeout(int.parse(responseData['expiresIn']));
+      final DateTime now = DateTime.now();
+      final DateTime expiryTime =
+          now.add(Duration(seconds: int.parse(responseData['expiresIn'])));
+
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
       prefs.setString('token', responseData['idToken']);
       prefs.setString('userEmail', email);
       prefs.setString('userId', responseData['localId']);
+      prefs.setString('expiryTime', expiryTime.toIso8601String());
     } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
       message = 'This email was not found.';
     } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
@@ -289,23 +298,40 @@ mixin UsersModel on ConnectedProductsModel {
   autoAthenticate() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String token = prefs.getString('token');
+    final String expiryTimeString = prefs.get('expiryTime');
 
     if (token != null) {
+      final DateTime now = DateTime.now();
+      final parsedExpiryTime = DateTime.parse(expiryTimeString);
+
+      if (parsedExpiryTime.isBefore(now)) {
+        _authenticatedUser = null;
+        notifyListeners();
+        return;
+      }
+
       _authenticatedUser = User(
         id: prefs.getString('userId'),
         email: prefs.getString('userEmail'),
         token: token,
       );
+      final int tokenLifespan = parsedExpiryTime.difference(now).inSeconds;
+      setAuthTimeout(tokenLifespan);
       notifyListeners();
     }
   }
 
   void logout() async {
     _authenticatedUser = null;
+    _authTimer.cancel();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
     prefs.remove('userEmail');
     prefs.remove('userId');
+  }
+
+  void setAuthTimeout(int time) {
+    _authTimer = Timer(Duration(seconds: time), logout);
   }
 }
 
