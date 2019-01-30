@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import '../models/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
@@ -219,6 +220,10 @@ mixin ProductsModel on ConnectedProductsModel {
 }
 
 mixin UsersModel on ConnectedProductsModel {
+  User get user {
+    return _authenticatedUser;
+  }
+
   Future<Map<String, dynamic>> authenticate(String email, String password,
       [AuthMode mode = AuthMode.Login]) async {
     _isLoading = true;
@@ -259,6 +264,11 @@ mixin UsersModel on ConnectedProductsModel {
         email: email,
         token: responseData['idToken'],
       );
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      prefs.setString('token', responseData['idToken']);
+      prefs.setString('userEmail', email);
+      prefs.setString('userId', responseData['localId']);
     } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
       message = 'This email was not found.';
     } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
@@ -274,6 +284,28 @@ mixin UsersModel on ConnectedProductsModel {
       'success': !hasError,
       'message': message,
     };
+  }
+
+  autoAthenticate() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token');
+
+    if (token != null) {
+      _authenticatedUser = User(
+        id: prefs.getString('userId'),
+        email: prefs.getString('userEmail'),
+        token: token,
+      );
+      notifyListeners();
+    }
+  }
+
+  void logout() async {
+    _authenticatedUser = null;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+    prefs.remove('userEmail');
+    prefs.remove('userId');
   }
 }
 
