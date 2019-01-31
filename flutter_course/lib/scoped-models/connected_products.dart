@@ -177,6 +177,10 @@ mixin ProductsModel on ConnectedProductsModel {
           price: productData['price'],
           userEmail: productData['userEmail'],
           userId: productData['userId'],
+          isFavorite: productData['wishlistUsers'] == null
+              ? false
+              : (productData['wishlistUsers'] as Map<String, dynamic>)
+                  .containsKey(_authenticatedUser.id),
         );
         fetchedProductList.add(product);
       });
@@ -193,13 +197,17 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void toggleProductFavoriteStatus() {
+  void toggleProductFavoriteStatus() async {
+    final bool isCurrentlyFavorite = selectedProduct.isFavorite;
+    final bool newFavoriteStatus = !isCurrentlyFavorite;
+    http.Response response;
+
     final Product updatedProduct = Product(
       id: selectedProduct.id,
       title: selectedProduct.title,
       description: selectedProduct.description,
       price: selectedProduct.price,
-      isFavorite: !selectedProduct.isFavorite,
+      isFavorite: newFavoriteStatus,
       image: selectedProduct.image,
       userEmail: selectedProduct.userEmail,
       userId: selectedProduct.userId,
@@ -207,6 +215,34 @@ mixin ProductsModel on ConnectedProductsModel {
 
     _products[selectedProductIndex] = updatedProduct;
     notifyListeners();
+
+    if (newFavoriteStatus) {
+      response = await http.put(
+          'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+          body: json.encode(true));
+    } else {
+      response = await http.delete(
+        'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+      );
+    }
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      // We re rolling back the changes in case something wrog happened while updating
+      final Product updatedProduct = Product(
+        id: selectedProduct.id,
+        title: selectedProduct.title,
+        description: selectedProduct.description,
+        price: selectedProduct.price,
+        // rolling back the changes because something fails on the server
+        isFavorite: isCurrentlyFavorite,
+        image: selectedProduct.image,
+        userEmail: selectedProduct.userEmail,
+        userId: selectedProduct.userId,
+      );
+
+      _products[selectedProductIndex] = updatedProduct;
+      notifyListeners();
+    }
   }
 
   void selectProduct(String productId) {
@@ -341,7 +377,7 @@ mixin UsersModel on ConnectedProductsModel {
   }
 
   void setAuthTimeout(int time) {
-    _authTimer = Timer(Duration(milliseconds: time * 2), logout);
+    _authTimer = Timer(Duration(seconds: time), logout);
   }
 }
 
