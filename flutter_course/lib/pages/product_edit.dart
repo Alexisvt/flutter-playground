@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
+import '../widgets/forms_inputs/location.dart';
 
 class ProductEditPage extends StatefulWidget {
   @override
@@ -57,6 +58,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
               SizedBox(
                 height: 10.0,
               ),
+              LocationInput(),
               _buildSubmitButton(),
               // custom button
               // GestureDetector(
