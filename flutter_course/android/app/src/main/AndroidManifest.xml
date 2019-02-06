@@ -6,6 +6,7 @@
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -13,6 +14,8 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application android:name="io.flutter.app.FlutterApplication" android:label="flutter_course" android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAgKswUsxTK6E-_9wA6mA8vU5_i8LfY29s"/>
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAgKswUsxTK6E-_9wA6mA8vU5_i8LfY29s"/>
         <activity android:name=".MainActivity" android:launchMode="singleTop" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
             <!-- This keeps the window background of the activity showing
@@ -25,5 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name="com.apptreesoftware.mapview.MapActivity" android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
     </application>
 </manifest>

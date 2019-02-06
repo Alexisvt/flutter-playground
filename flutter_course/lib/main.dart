@@ -8,11 +8,13 @@ import './pages/auth.dart';
 import 'package:scoped_model/scoped_model.dart';
 import './scoped-models/main.dart';
 import './models/product.dart';
+import 'package:map_view/map_view.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
   // debugPaintBaselinesEnabled = true;
   // debugPaintPointersEnabled = true;
+  MapView.setApiKey('AIzaSyAgKswUsxTK6E-_9wA6mA8vU5_i8LfY29s');
   runApp(MyApp());
 }
 
