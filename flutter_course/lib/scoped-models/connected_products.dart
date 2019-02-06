@@ -86,6 +86,7 @@ mixin ProductsModel on ConnectedProductsModel {
         price: price,
         userEmail: _authenticatedUser.email,
         userId: _authenticatedUser.id,
+        location: locData,
       );
 
       _products.add(newProduct);
@@ -126,6 +127,7 @@ mixin ProductsModel on ConnectedProductsModel {
         price: price,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
+        location:
       );
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
@@ -182,6 +184,7 @@ mixin ProductsModel on ConnectedProductsModel {
           price: productData['price'],
           userEmail: productData['userEmail'],
           userId: productData['userId'],
+          location: LocationData(latitude: productData['loc_lat'], longitude: productData['loc_lng'], address: productData['loc_address']),
           isFavorite: productData['wishlistUsers'] == null
               ? false
               : (productData['wishlistUsers'] as Map<String, dynamic>)
