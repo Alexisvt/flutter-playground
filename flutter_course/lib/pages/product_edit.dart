@@ -3,6 +3,7 @@ import '../models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 import '../widgets/forms_inputs/location.dart';
+import '../models/location_data.dart';
 
 class ProductEditPage extends StatefulWidget {
   @override
@@ -14,7 +15,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'title': null,
     'description': null,
     'price': null,
-    'image': 'assets/food.jpg'
+    'image': 'assets/food.jpg',
+    'location': null,
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -58,7 +60,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
               SizedBox(
                 height: 10.0,
               ),
-              LocationInput(),
+              LocationInput(_setLocation),
               _buildSubmitButton(),
               // custom button
               // GestureDetector(
@@ -74,6 +76,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
         ),
       ),
     );
+  }
+
+  void _setLocation(LocationData locData) {
+    _formData['location'] = locData;
   }
 
   Widget _buildSubmitButton() {
@@ -109,6 +115,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _formData['description'],
         _formData['image'],
         _formData['price'],
+        _formData['location'],
       ).then((bool success) {
         if (success) {
           Navigator.pushReplacementNamed(context, '/products')

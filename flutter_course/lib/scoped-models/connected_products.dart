@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import '../models/location_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,6 +50,7 @@ mixin ProductsModel on ConnectedProductsModel {
     String description,
     String image,
     double price,
+    LocationData locData,
   ) async {
     _isLoading = true;
     notifyListeners();
@@ -60,6 +62,9 @@ mixin ProductsModel on ConnectedProductsModel {
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
+      'loc_lat': locData.latitude,
+      'loc_lng': locData.longitude,
+      'loc_address': locData.address,
     };
     try {
       final http.Response response = await http.post(
