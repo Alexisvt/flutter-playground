@@ -117,6 +117,9 @@ mixin ProductsModel on ConnectedProductsModel {
       'price': price,
       'userEmail': selectedProduct.userEmail,
       'userId': selectedProduct.userId,
+      'loc_lat': locData.latitude,
+      'loc_lng': locData.longitude,
+      'loc_address': locData.address,
     };
     return http
         .put(
