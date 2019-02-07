@@ -25,7 +25,7 @@ class _LocationInputState extends State<LocationInput> {
   void initState() {
     _addressInputFocusNode.addListener(_updateLocation);
     if (widget.product != null) {
-      getStaticMap(widget.product.location.address);
+      getStaticMap(widget.product.location.address, false);
     }
     super.initState();
   }
@@ -36,7 +36,7 @@ class _LocationInputState extends State<LocationInput> {
     super.dispose();
   }
 
-  void getStaticMap(String address) async {
+  void getStaticMap(String address, [bool geocode = true]) async {
     if (address.isEmpty) {
       setState(() {
         _staticMapUri = null;
@@ -45,7 +45,7 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
-    if (widget.product == null) {
+    if (geocode) {
       final Uri uri = Uri.https(
           'maps.googleapis.com', '/maps/api/geocode/json', {
         'address': address,

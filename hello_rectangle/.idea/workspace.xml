@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1276739c-d8b0-43dd-aebf-027df44a9e3e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../flutter_course/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_course/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_course/ios/Runner/AppDelegate.m" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_course/ios/Runner/AppDelegate.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_course/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_course/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../flutter_course/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_course/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_course/lib/pages/product_edit.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_course/lib/pages/product_edit.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_course/lib/scoped-models/connected_products.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_course/lib/scoped-models/connected_products.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../flutter_course/lib/widgets/forms_inputs/location.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../flutter_course/lib/widgets/forms_inputs/location.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -25,9 +24,11 @@
     <session id="-1373732634">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="3" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.open.time.6" value="1" />
+          <entry key="project.open.time.7" value="1" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
     </session>
@@ -38,7 +39,7 @@
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="198">
-              <caret line="11" column="34" lean-forward="true" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
+              <caret line="11" column="34" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
               <folding>
                 <element signature="e#0#841#0" expanded="true" />
               </folding>
@@ -140,7 +141,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1844" y="51" width="1204" height="978" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.24956971" />
       <window_info id="Structure" order="1" weight="0.25" />
@@ -150,7 +150,6 @@
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info id="Captures" order="6" side_tool="true" />
       <window_info id="Capture Tool" order="7" />
-      <window_info anchor="bottom" id="Flutter Performance" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3295583" />
@@ -164,6 +163,8 @@
       <window_info anchor="bottom" id="Logcat" order="10" weight="0.3295583" />
       <window_info anchor="bottom" id="Version Control" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="12" weight="0.3295583" />
+      <window_info anchor="bottom" id="Flutter Performance" order="13" side_tool="true" />
+      <window_info anchor="right" id="Assistant" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -182,7 +183,7 @@
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
-          <caret line="11" column="34" lean-forward="true" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
+          <caret line="11" column="34" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
           <folding>
             <element signature="e#0#841#0" expanded="true" />
           </folding>

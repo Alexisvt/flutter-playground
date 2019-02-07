@@ -101,7 +101,12 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   Future<bool> updateProduct(
-      String title, String description, String image, double price) {
+    String title,
+    String description,
+    String image,
+    double price,
+    LocationData locData,
+  ) {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> updateData = {
@@ -127,7 +132,7 @@ mixin ProductsModel on ConnectedProductsModel {
         price: price,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
-        location:
+        location: locData,
       );
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
@@ -184,7 +189,10 @@ mixin ProductsModel on ConnectedProductsModel {
           price: productData['price'],
           userEmail: productData['userEmail'],
           userId: productData['userId'],
-          location: LocationData(latitude: productData['loc_lat'], longitude: productData['loc_lng'], address: productData['loc_address']),
+          location: LocationData(
+              latitude: productData['loc_lat'],
+              longitude: productData['loc_lng'],
+              address: productData['loc_address']),
           isFavorite: productData['wishlistUsers'] == null
               ? false
               : (productData['wishlistUsers'] as Map<String, dynamic>)
@@ -225,6 +233,7 @@ mixin ProductsModel on ConnectedProductsModel {
       image: selectedProduct.image,
       userEmail: selectedProduct.userEmail,
       userId: selectedProduct.userId,
+      location: selectedProduct.location,
     );
 
     _products[selectedProductIndex] = updatedProduct;
@@ -252,6 +261,7 @@ mixin ProductsModel on ConnectedProductsModel {
         image: selectedProduct.image,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
+        location: selectedProduct.location,
       );
 
       _products[selectedProductIndex] = updatedProduct;
