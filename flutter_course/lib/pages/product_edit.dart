@@ -21,6 +21,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleTextController = TextEditingController();
+  final _descriptionTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +122,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     if (selectedProductIndex == -1) {
       addProduct(
         _titleTextController.text,
-        _formData['description'],
+        _descriptionTextController.text,
         _formData['image'],
         _formData['price'],
         _formData['location'],
@@ -149,7 +150,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     } else {
       updateProduct(
         _titleTextController.text,
-        _formData['description'],
+        _descriptionTextController.text,
         _formData['image'],
         _formData['price'],
         _formData['location'],
@@ -180,9 +181,17 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildDescriptionTextField(Product product) {
+    if (product == null && _descriptionTextController.text.trim() == '') {
+      _descriptionTextController.text = '';
+    } else if (product != null &&
+        _descriptionTextController.text.trim() == '') {
+      _descriptionTextController.text = product.description;
+    }
+
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product description'),
-      initialValue: product == null ? '' : product.description,
+      // initialValue: product == null ? '' : product.description,
+      controller: _descriptionTextController,
       validator: (String value) {
         // logic that validate the value
         // if there is no issue return null
