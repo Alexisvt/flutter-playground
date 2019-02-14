@@ -175,7 +175,8 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
             fillColor: Colors.white,
           ),
           validator: (String value) {
-            if (_passwordTextController.text != value) {
+            if ((_authMode != AuthMode.Login) &&
+                (_passwordTextController.text != value)) {
               return "Password do not match.";
             }
           },
