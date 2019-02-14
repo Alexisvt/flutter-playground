@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/helpers/custom_routes.dart';
 // import 'package:flutter/rendering.dart';
 
 import './pages/products.dart';
@@ -74,7 +75,7 @@ class _MyAppState extends State<MyApp> {
             final Product product = _model.allProducts
                 .firstWhere((product) => product.id == productId);
 
-            return MaterialPageRoute<bool>(
+            return CustomRoute<bool>(
                 builder: (BuildContext context) =>
                     !_isAuthenticated ? AuthPage() : ProductPage(product));
           }
