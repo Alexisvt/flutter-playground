@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/models/product.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:async';
 
 class ImageInput extends StatefulWidget {
+  final Function setImage;
+  final Product product;
+
+  ImageInput(this.setImage, this.product);
+
   @override
   _ImageInputState createState() => _ImageInputState();
 }
 
 class _ImageInputState extends State<ImageInput> {
   File _imageFile;
+
   void _getImage(BuildContext context, ImageSource source) async {
     final File image =
         await ImagePicker.pickImage(source: source, maxWidth: 400.0);
     setState(() {
       _imageFile = image;
     });
+    widget.setImage(image);
     Navigator.pop(context);
   }
 
