@@ -23,6 +23,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleTextController = TextEditingController();
   final _descriptionTextController = TextEditingController();
+  final _priceTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +131,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _titleTextController.text,
         _descriptionTextController.text,
         _formData['image'],
-        _formData['price'],
+        double.parse(_priceTextController.text),
         _formData['location'],
       ).then((bool success) {
         if (success) {
@@ -158,7 +159,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _titleTextController.text,
         _descriptionTextController.text,
         _formData['image'],
-        _formData['price'],
+        double.parse(_priceTextController.text),
         _formData['location'],
       ).then((_) {
         Navigator.pushReplacementNamed(context, '/products')
@@ -168,9 +169,16 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildPriceTextField(Product product) {
+    if (product == null && _priceTextController.text.trim() == '') {
+      _priceTextController.text = '';
+    } else if (product != null && _priceTextController.text.trim() == '') {
+      _priceTextController.text = product.price.toString();
+    }
+
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product price'),
-      initialValue: product == null ? '' : product.price.toString(),
+      // initialValue: product == null ? '' : product.price.toString(),
+      controller: _priceTextController,
       validator: (String value) {
         // logic that validate the value
         // if there is no issue return null

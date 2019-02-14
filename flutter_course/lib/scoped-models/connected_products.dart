@@ -153,17 +153,32 @@ mixin ProductsModel on ConnectedProductsModel {
   Future<bool> updateProduct(
     String title,
     String description,
-    String image,
+    File image,
     double price,
     LocationData locData,
-  ) {
+  ) async {
     _isLoading = true;
     notifyListeners();
+
+    String imageUrl = selectedProduct.image;
+    String imagePath = selectedProduct.imagePath;
+    if (image != null) {
+      final uploadData = await uploadImage(image);
+
+      if (uploadData == null) {
+        print('Upload failed');
+        return false;
+      }
+
+      imageUrl = uploadData['imageUrl'];
+      imagePath = uploadData['imagePath'];
+    }
+
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
-      'image':
-          'https://cdn.ochocandy.com/wp-content/uploads/2017/09/coconut.jpg',
+      'imageUrl': imageUrl,
+      'imagePath': imagePath,
       'price': price,
       'userEmail': selectedProduct.userEmail,
       'userId': selectedProduct.userId,
@@ -171,30 +186,34 @@ mixin ProductsModel on ConnectedProductsModel {
       'loc_lng': locData.longitude,
       'loc_address': locData.address,
     };
-    return http
-        .put(
-            'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
-            body: json.encode(updateData))
-        .then((response) {
+
+    try {
+      final http.Response response = await http.put(
+          'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
+          body: json.encode(updateData));
+
       _isLoading = false;
+
       final Product updatedProduct = Product(
         id: selectedProduct.id,
         title: title,
         description: description,
-        image: image,
+        image: imageUrl,
+        imagePath: imagePath,
         price: price,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
         location: locData,
       );
+
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
       return true;
-    }).catchError((error) {
+    } catch (error) {
       _isLoading = false;
       notifyListeners();
       return false;
-    });
+    }
   }
 
   Future<bool> deleteProduct() {
