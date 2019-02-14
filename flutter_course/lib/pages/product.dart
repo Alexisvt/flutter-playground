@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_course/widgets/products/product_fab.dart';
 import 'package:map_view/map_view.dart';
 import '../models/product.dart';
 import '../widgets/ui_elements/title_default.dart';
@@ -13,12 +14,12 @@ class ProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () {
+      onWillPop: () {
 //        print('back button pressed');
-          Navigator.pop(context, false);
-          return Future.value(false);
-        },
-        child: Scaffold(
+        Navigator.pop(context, false);
+        return Future.value(false);
+      },
+      child: Scaffold(
           appBar: AppBar(
             title: Text(product.title),
           ),
@@ -45,7 +46,8 @@ class ProductPage extends StatelessWidget {
               ),
             ],
           ),
-        ));
+          floatingActionButton: ProductFAB()),
+    );
   }
 
   void _showMap() {
