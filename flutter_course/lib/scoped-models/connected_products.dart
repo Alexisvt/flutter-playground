@@ -106,8 +106,6 @@ mixin ProductsModel on ConnectedProductsModel {
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
-      'image':
-          'https://cdn.ochocandy.com/wp-content/uploads/2017/09/coconut.jpg',
       'price': price,
       'imagePath': uploadData['imagePath'],
       'imageUrl': uploadData['imageUrl'],
@@ -134,6 +132,7 @@ mixin ProductsModel on ConnectedProductsModel {
         title: title,
         description: description,
         image: uploadData['imageUrl'],
+        imagePath: uploadData['imagePath'],
         price: price,
         userEmail: _authenticatedUser.email,
         userId: _authenticatedUser.id,
@@ -239,7 +238,8 @@ mixin ProductsModel on ConnectedProductsModel {
           id: productId,
           title: productData['title'],
           description: productData['description'],
-          image: productData['image'],
+          image: productData['imageUrl'],
+          imagePath: productData['imagePath'],
           price: productData['price'],
           userEmail: productData['userEmail'],
           userId: productData['userId'],
@@ -285,6 +285,7 @@ mixin ProductsModel on ConnectedProductsModel {
       price: selectedProduct.price,
       isFavorite: newFavoriteStatus,
       image: selectedProduct.image,
+      imagePath: selectedProduct.imagePath,
       userEmail: selectedProduct.userEmail,
       userId: selectedProduct.userId,
       location: selectedProduct.location,
@@ -313,6 +314,7 @@ mixin ProductsModel on ConnectedProductsModel {
         // rolling back the changes because something fails on the server
         isFavorite: isCurrentlyFavorite,
         image: selectedProduct.image,
+        imagePath: selectedProduct.imagePath,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
         location: selectedProduct.location,
