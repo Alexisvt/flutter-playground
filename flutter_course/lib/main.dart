@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/helpers/custom_routes.dart';
+import 'package:flutter_course/shared/adaptive_theme.dart';
 import 'package:flutter_course/shared/global_config.dart';
 // import 'package:flutter/rendering.dart';
 
@@ -47,12 +48,7 @@ class _MyAppState extends State<MyApp> {
     return ScopedModel<MainModel>(
       model: _model,
       child: MaterialApp(
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: Colors.deepOrange,
-          accentColor: Colors.deepPurple,
-          buttonColor: Colors.deepPurple,
-        ),
+        theme: getAdaptiveThemeData(context),
         routes: {
           '/': (BuildContext context) =>
               !_isAuthenticated ? AuthPage() : ProductsPage(_model),

@@ -20,9 +20,6 @@ class ProductPage extends StatelessWidget {
         return Future.value(false);
       },
       child: Scaffold(
-        // appBar: AppBar(
-        //   title: Text(product.title),
-        // ),
         body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(

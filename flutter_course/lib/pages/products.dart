@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/widgets/ui_elements/adapative_progress_indicator.dart';
 
 import '../widgets/products/products.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -28,6 +29,7 @@ class _ProductsPageState extends State<ProductsPage> {
     return Scaffold(
       drawer: _buildSideDrawer(context),
       appBar: AppBar(
+        elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
         title: Text('EasyList'),
         actions: <Widget>[
           ScopedModelDescendant<MainModel>(
@@ -58,7 +60,7 @@ class _ProductsPageState extends State<ProductsPage> {
         if (model.displayedProducts.length > 0 && !model.isLoading) {
           content = Products();
         } else if (model.isLoading) {
-          content = Center(child: CircularProgressIndicator());
+          content = Center(child: AdapativeProgressIndicator());
         }
 
         return RefreshIndicator(
@@ -74,6 +76,8 @@ class _ProductsPageState extends State<ProductsPage> {
       child: Column(
         children: <Widget>[
           AppBar(
+            elevation:
+                Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
             automaticallyImplyLeading: false,
             title: Text('Choose'),
           ),
