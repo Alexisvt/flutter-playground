@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/helpers/custom_routes.dart';
+import 'package:flutter_course/shared/global_config.dart';
 // import 'package:flutter/rendering.dart';
 
 import './pages/products.dart';
@@ -15,7 +16,7 @@ void main() {
   // debugPaintSizeEnabled = true;
   // debugPaintBaselinesEnabled = true;
   // debugPaintPointersEnabled = true;
-  MapView.setApiKey('AIzaSyAgKswUsxTK6E-_9wA6mA8vU5_i8LfY29s');
+  MapView.setApiKey(apiKey);
   runApp(MyApp());
 }
 
