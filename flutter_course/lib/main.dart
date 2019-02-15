@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/helpers/custom_routes.dart';
 import 'package:flutter_course/shared/adaptive_theme.dart';
 import 'package:flutter_course/shared/global_config.dart';
+import 'package:flutter/services.dart';
 // import 'package:flutter/rendering.dart';
 
 import './pages/products.dart';
@@ -30,7 +31,21 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final MainModel _model = MainModel();
+  final _platformChannel = MethodChannel('flutter-course.com/battery');
   bool _isAuthenticated = false;
+
+  Future<void> _getBatteryLevel() async {
+    String batteryLevel;
+
+    try {
+      final int result = await _platformChannel.invokeMethod('getBatteryLevel');
+      batteryLevel = 'Battery level is $result %.';
+    } catch (error) {
+      batteryLevel = 'Failed to get battery level.';
+    }
+
+    print(batteryLevel);
+  }
 
   @override
   void initState() {
