@@ -52,8 +52,7 @@ class ProductCard extends StatelessWidget {
             icon: Icon(
                 product.isFavorite ? Icons.favorite : Icons.favorite_border),
             onPressed: () {
-              model.selectProduct(product.id);
-              model.toggleProductFavoriteStatus();
+              model.toggleProductFavoriteStatus(product);
             },
             color: Colors.red,
           )
@@ -68,11 +67,19 @@ class ProductCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TitleDefault(product.title),
-            SizedBox(
-              width: 10.0,
+            Flexible(
+              child: TitleDefault(product.title),
             ),
-            ProductTag(product.price.toString())
+            Flexible(
+              child: SizedBox(
+                width: 10.0,
+              ),
+            ),
+            Flexible(
+              child: ProductTag(
+                product.price.toString(),
+              ),
+            )
           ],
         ));
   }

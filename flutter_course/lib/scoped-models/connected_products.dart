@@ -292,54 +292,58 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void toggleProductFavoriteStatus() async {
-    final bool isCurrentlyFavorite = selectedProduct.isFavorite;
+  void toggleProductFavoriteStatus(Product toggledProduct) async {
+    final bool isCurrentlyFavorite = toggledProduct.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     http.Response response;
 
+    // NEWLY ADDED => Get the index of the product passed into the method
+    final int toggledProductIndex = _products.indexWhere((Product product) {
+      return product.id == toggledProduct.id;
+    });
+
     final Product updatedProduct = Product(
-      id: selectedProduct.id,
-      title: selectedProduct.title,
-      description: selectedProduct.description,
-      price: selectedProduct.price,
+      id: toggledProduct.id,
+      title: toggledProduct.title,
+      description: toggledProduct.description,
+      price: toggledProduct.price,
       isFavorite: newFavoriteStatus,
-      image: selectedProduct.image,
-      imagePath: selectedProduct.imagePath,
-      userEmail: selectedProduct.userEmail,
-      userId: selectedProduct.userId,
-      location: selectedProduct.location,
+      image: toggledProduct.image,
+      imagePath: toggledProduct.imagePath,
+      userEmail: toggledProduct.userEmail,
+      userId: toggledProduct.userId,
+      location: toggledProduct.location,
     );
 
-    _products[selectedProductIndex] = updatedProduct;
+    _products[toggledProductIndex] = updatedProduct;
     notifyListeners();
 
     if (newFavoriteStatus) {
       response = await http.put(
-          'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+          'https://flutter-products-d86a0.firebaseio.com/products/${toggledProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
           body: json.encode(true));
     } else {
       response = await http.delete(
-        'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+        'https://flutter-products-d86a0.firebaseio.com/products/${toggledProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
       );
     }
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       // We re rolling back the changes in case something wrog happened while updating
       final Product updatedProduct = Product(
-        id: selectedProduct.id,
-        title: selectedProduct.title,
-        description: selectedProduct.description,
-        price: selectedProduct.price,
-        // rolling back the changes because something fails on the server
+        id: toggledProduct.id,
+        title: toggledProduct.title,
+        description: toggledProduct.description,
+        price: toggledProduct.price,
         isFavorite: isCurrentlyFavorite,
-        image: selectedProduct.image,
-        imagePath: selectedProduct.imagePath,
-        userEmail: selectedProduct.userEmail,
-        userId: selectedProduct.userId,
-        location: selectedProduct.location,
+        image: toggledProduct.image,
+        imagePath: toggledProduct.imagePath,
+        userEmail: toggledProduct.userEmail,
+        userId: toggledProduct.userId,
+        location: toggledProduct.location,
       );
 
-      _products[selectedProductIndex] = updatedProduct;
+      _products[toggledProductIndex] = updatedProduct;
       notifyListeners();
     }
   }
