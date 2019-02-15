@@ -26,6 +26,9 @@ class ProductCard extends StatelessWidget {
             ),
           ),
           _buildTitlePriceRow(),
+          SizedBox(
+            height: 10.0,
+          ),
           AddressTag(product.location.address),
           _buildActionButtons(context)
         ],
