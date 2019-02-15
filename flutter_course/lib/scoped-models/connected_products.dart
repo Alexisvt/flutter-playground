@@ -236,9 +236,11 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<Null> fetchProducts({onlyForUser = false}) {
+  Future<Null> fetchProducts({onlyForUser = false, clearExisting = false}) {
     _isLoading = true;
-    _products = [];
+    if (clearExisting) {
+      _products = [];
+    }
     notifyListeners();
     return http
         .get(
