@@ -188,7 +188,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
 
     try {
-      final http.Response response = await http.put(
+      await http.put(
           'https://flutter-products-d86a0.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
           body: json.encode(updateData));
 

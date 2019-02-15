@@ -108,7 +108,7 @@ class _LocationInputState extends State<LocationInput> {
         lat: currentLocation['latitude'],
         lng: currentLocation['longitude'],
       );
-    } on Exception catch (error) {
+    } catch (error) {
       showDialog(
           context: context,
           builder: (BuildContext contenxt) {
