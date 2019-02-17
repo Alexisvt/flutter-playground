@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
         _isAuthenticated = isAuthenticated;
       });
     });
+    _getBatteryLevel();
     super.initState();
   }
 
