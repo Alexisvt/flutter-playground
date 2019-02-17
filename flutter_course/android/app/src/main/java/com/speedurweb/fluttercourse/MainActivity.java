@@ -1,4 +1,4 @@
-package com.example.fluttercourse;
+package com.speedurweb.fluttercourse;
 
 import android.os.Bundle;
 import android.content.ContextWrapper;
