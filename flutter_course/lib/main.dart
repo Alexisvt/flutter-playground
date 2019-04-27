@@ -72,29 +72,7 @@ class _MyAppState extends State<MyApp> {
           '/admin': (BuildContext context) =>
               !_isAuthenticated ? AuthPage() : ProductsAdminPage(_model),
         },
-        onGenerateRoute: (RouteSettings settings) {
-          if (!_isAuthenticated) {
-            return MaterialPageRoute<bool>(
-              builder: (BuildContext context) => AuthPage(),
-            );
-          }
-          final List<String> pathElements = settings.name.split('/');
-
-          if (pathElements[0] != '') {
-            return null;
-          }
-
-          if (pathElements[1] == 'product') {
-            final String productId = pathElements[2];
-            final Product product = _model.allProducts
-                .firstWhere((product) => product.id == productId);
-
-            return CustomRoute<bool>(
-                builder: (BuildContext context) =>
-                    !_isAuthenticated ? AuthPage() : ProductPage(product));
-          }
-          return null;
-        },
+        onGenerateRoute: buildGenerateRoute,
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute(
               builder: (BuildContext context) =>
@@ -102,5 +80,29 @@ class _MyAppState extends State<MyApp> {
         },
       ),
     );
+  }
+
+  Route buildGenerateRoute(RouteSettings settings) {
+    if (!_isAuthenticated) {
+      return MaterialPageRoute<bool>(
+        builder: (BuildContext context) => AuthPage(),
+      );
+    }
+    final List<String> pathElements = settings.name.split('/');
+
+    if (pathElements[0] != '') {
+      return null;
+    }
+
+    if (pathElements[1] == 'product') {
+      final String productId = pathElements[2];
+      final Product product =
+          _model.allProducts.firstWhere((product) => product.id == productId);
+
+      return CustomRoute<bool>(
+          builder: (BuildContext context) =>
+              !_isAuthenticated ? AuthPage() : ProductPage(product));
+    }
+    return null;
   }
 }
